@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态规划教学演示</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>动态规划算法演示</h1>
+        <div class="input-section">
+            <div class="problem-selector">
+    <label for="problem-selector">选择问题：</label>
+    <select id="problem-selector">
+        <option value="fibonacci">斐波那契数列</option>
+        <option value="knapsack">0-1背包问题</option>
+        <option value="lcs">最长公共子序列</option>
+    </select>
+</div>
+<div class="input-group">
+    <label for="fibonacci-input">斐波那契数列输入：</label>
+    <input type="number" id="fibonacci-input" placeholder="请输入正整数" class="hidden">
+</div>
+<div class="input-group">
+    <label for="knapsack-weights">物品重量：</label>
+    <input type="text" id="knapsack-weights" placeholder="例如：1,2,3" class="hidden">
+    <label for="knapsack-values">物品价值：</label>
+    <input type="text" id="knapsack-values" placeholder="例如：4,5,6" class="hidden">
+    <label for="knapsack-capacity">背包容量：</label>
+    <input type="number" id="knapsack-capacity" placeholder="例如：10" class="hidden">
+</div>
+<div class="input-group">
+    <label for="lcs-text1">字符串1：</label>
+    <input type="text" id="lcs-text1" placeholder="例如：ABC" class="hidden">
+    <label for="lcs-text2">字符串2：</label>
+    <input type="text" id="lcs-text2" placeholder="例如：AC" class="hidden">
+</div>
+        </div>
+        <button id="solve-btn">求解</button>
+        <div class="steps-container">
+            <h2>执行步骤：</h2>
+            <div id="steps-output"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

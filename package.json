@@ -1,0 +1,30 @@
+{
+  "name": "mcptest1",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "vite": "^6.3.3"
+  },
+  "dependencies": {
+    "esbuild": "^0.25.3",
+    "fdir": "^6.4.4",
+    "nanoid": "^3.3.11",
+    "picocolors": "^1.1.1",
+    "picomatch": "^4.0.2",
+    "postcss": "^8.5.3",
+    "rollup": "^4.40.0",
+    "source-map-js": "^1.2.1",
+    "tinyglobby": "^0.2.13"
+  },
+  "description": ""
+}
