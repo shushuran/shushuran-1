@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>注册</title>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <!-- 自定义样式 -->
+    <style>
+        /* 导入 Poppins 字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa, #40806d); /* 主色调渐变 */
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.8; /* 增加行高 */
+        }
+        .register-container {
+            background: rgba(255, 255, 255, 0.95); /* 半透明背景 */
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px); /* 毛玻璃效果 */
+            max-width: 400px;
+            width: 100%;
+        }
+        h2 {
+            color: #40806d; /* 主色调 */
+            font-weight: 700; /* 加粗字体 */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            color: #2c3e50; /* 深灰色文字 */
+            font-weight: 500; /* 中等字重 */
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #40806d; /* 主色调 */
+            box-shadow: 0 0 5px rgba(64, 128, 109, 0.5); /* 主色调阴影 */
+        }
+        .btn {
+            border: none;
+            border-radius: 50px; /* 圆形按钮 */
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600; /* 加粗字体 */
+            transition: all 0.3s ease;
+            margin: 5px;
+            width: 100%; /* 按钮宽度 */
+            font-family: 'Poppins', sans-serif; /* 使用 Poppins 字体 */
+            letter-spacing: 0.5px; /* 增加字间距 */
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #40806d, #4a148c); /* 主色调渐变 */
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px); /* 悬停时按钮上移 */
+            box-shadow: 0 4px 15px rgba(64, 128, 109, 0.4); /* 主色调阴影 */
+        }
+        .text-center a {
+            color: #40806d; /* 主色调 */
+            text-decoration: none;
+            font-weight: 500; /* 中等字重 */
+        }
+        .text-center a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="static/js/jquery-3.7.1.min.js"></script>
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="static/js/bootstrap.bundle.min.js"></script>
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/register.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4 register-container">
+            <h2>注册</h2>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerUserName">用户名</label>
+                    <input type="text" class="form-control" id="registerUserName" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerUserEmail">邮箱</label>
+                    <input type="email" class="form-control" id="registerUserEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerUserPasswd">密码</label>
+                    <input type="password" class="form-control" id="registerUserPasswd" required>
+                </div>
+                <button type="button" class="btn btn-primary btn-block" onclick="submitRegisterForm()">注册</button>
+                <a href="login.html">
+                    <p class="text-center mt-2">
+                        已有账号，返回登录
+                    </p>
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

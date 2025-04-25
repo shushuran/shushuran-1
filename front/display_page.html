@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农业早知道</title>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <!-- 自定义样式 -->
+    <style>
+        /* 导入 Poppins 字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            background: linear-gradient(135deg, #f0faf7, #e0f2f1, #d0ece7); /* 更淡的绿色渐变背景 */
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* 导航栏样式 */
+        .custom-navbar {
+            background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #f8f9fa !important;
+        }
+
+        /* 表格样式 */
+        .table {
+            background: #fff;
+            border-radius: 15px; /* 更圆润的圆角 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* 防止圆角被表格内容覆盖 */
+        }
+
+        .table th {
+            background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变表头 */
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(165, 214, 167, 0.05); /* 更淡的绿色条纹 */
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(165, 214, 167, 0.1); /* 悬停效果 */
+        }
+
+        /* 分页样式 */
+        .pagination {
+            justify-content: center;
+        }
+
+        .page-item.active .page-link {
+            background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变分页按钮 */
+            border-color: #a5d6a7;
+            color: #fff;
+        }
+
+        .page-link {
+            color: #81c784;
+            border: 1px solid #dee2e6;
+            margin: 0 5px;
+            border-radius: 25px; /* 圆角分页按钮 */
+        }
+
+        .page-link:hover {
+            background: #a5d6a7;
+            color: #fff;
+        }
+
+        /* 整体布局 */
+        .container.custom-margin-top {
+            margin-top: 100px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px; /* 更圆润的圆角 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变卡片头部 */
+            color: #fff;
+            font-weight: 600;
+            border-radius: 15px 15px 0 0;
+        }
+
+        /* 结果展示区域 */
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px; /* 更圆润的圆角 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 输入框样式 */
+        .form-control {
+            border-radius: 25px; /* 圆角输入框 */
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .form-control:focus {
+            border-color: #a5d6a7;
+            box-shadow: 0 0 5px rgba(165, 214, 167, 0.5);
+        }
+    </style>
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="static/js/jquery-3.7.1.min.js"></script>
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="static/js/bootstrap.bundle.min.js"></script>
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="static/js/bootstrap.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg custom-navbar fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">农业早知道</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="userinfo.html">
+                        <strong id="username-text">未登录</strong>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container mt-6">
+    <!-- List Papers Table -->
+    <div class="card mb-4">
+        <div class="card-header">讯息</div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>标题</th>
+                    <th>作者</th>
+                    <th>发布时间</th>
+                    <th>最近更新时间</th>
+                </tr>
+                </thead>
+                <tbody id="paperTableBody">
+                <!-- Rows will be populated here -->
+                </tbody>
+            </table>
+            <nav>
+                <ul class="pagination" id="pagination">
+                    <!-- Pagination links will be populated here -->
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var currentPage = 1; // 当前页码
+        var pageSize = 10; // 每页显示的论文数量
+        // 初始加载论文列表
+        loadPapers(currentPage, pageSize);
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            alert('请先登录！');
+            window.location.href = 'login.html';
+            return;
+        }
+
+
+        // 加载论文列表
+        function loadPapers(pageNum, pageSize) {
+            const authToken = localStorage.getItem('authToken');
+
+            $.ajax({
+                url: `http://localhost:8080/paper/list?pageNum=${pageNum}&pageSize=${pageSize}`,
+                type: 'GET',
+                headers: {
+                    'Authorization': authToken
+                },
+                success: function(response) {
+                    if (response.code === 0) {
+                        const papers = response.data.items; // 假设数据在list属性中
+
+                        var totalItems = response.data.total; // 获取总条数
+
+                        var totalPages = Math.ceil(totalItems / pageSize);
+                        const paperTableBody = $('#paperTableBody');
+                        paperTableBody.empty();
+                        let currentId = 1;
+                        papers.forEach(paper => {
+                            const row = `<tr>
+                                   <td>${currentId}</td>
+                                   <td onclick="PaperDetail(${paper.id})">${paper.title}</td>
+                                   <td>${paper.author}</td>
+                                   <td>${paper.pushdate}</td>
+                                   <td>${paper.updatedate}</td>
+                               </tr>`;
+                            paperTableBody.append(row);
+                            currentId++;
+                        });
+
+                        const pagination = $('#pagination');
+                        pagination.empty();
+                        for (let i = 1; i <= response.data.totalPages; i++) {
+                            const li =
+                                `<li class="page-item"><a class="page-link" href="#" onclick="loadPapers(${i}, ${pageSize})">${i}</a></li>`;
+                            pagination.append(li);
+                        }
+                        updatePagination(totalPages, pageNum);
+                    } else {
+                        alert('Failed to load papers: ' + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status === 401) {
+                        alert('用户凭证已失效，请重新登录！');
+                        localStorage.removeItem('authToken');
+                        window.location.href = 'login.html';
+                    } else {
+                        alert('Error loading papers: ' + xhr.responseText);
+                    }
+                }
+            });
+        }
+        function updatePagination(totalPages, currentPage) {
+            var pagination = $('#pagination');
+            pagination.empty(); // 清空分页组件内容
+
+            // 添加“上一页”按钮（可选）
+            if (currentPage > 1) {
+                var prevButton = $('<li></li>').addClass('page-item');
+                var prevLink = $('<a></a>').addClass('page-link').attr('href', '#').text('上一页');
+                prevLink.click(function(event) {
+                    event.preventDefault();
+                    currentPage--;
+                    loadPapers(currentPage, pageSize);
+                });
+                prevButton.append(prevLink);
+                pagination.append(prevButton);
+            }
+
+            // 添加页码链接
+            for (var i = 1; i <= totalPages; i++) {
+                var li = $('<li></li>').addClass('page-item');
+                console.log(i + "+++");
+                console.log(currentPage);
+                if (i == currentPage) {
+                    li.addClass('active');
+                    li.append($('<span></span>').addClass('page-link').text(i));
+                } else {
+
+                    var a = $('<a></a>').addClass('page-link').attr('href', '#').text(i);
+                    a.click(function(event) {
+                        event.preventDefault();
+                        currentPage = $(this).text();
+                        loadPapers(currentPage, pageSize);
+                    });
+                    li.append(a);
+                }
+                pagination.append(li);
+            }
+
+            // 添加“下一页”按钮（可选）
+            if (currentPage < totalPages) {
+                var nextButton = $('<li></li>').addClass('page-item');
+                var nextLink = $('<a></a>').addClass('page-link').attr('href', '#').text('下一页');
+                nextLink.click(function(event) {
+                    event.preventDefault();
+                    currentPage++;
+                    loadPapers(currentPage, pageSize);
+                });
+                nextButton.append(nextLink);
+                pagination.append(nextButton);
+            }
+
+        }
+        // 查看论文详情
+        window.PaperDetail = function (id) {
+            window.location.href = 'display_pagedetails.html?id=' + id;
+        };
+
+        // 获取当前用户名
+        $.ajax({
+            url: 'http://localhost:8080/user/findusername',
+            type: 'GET',
+            headers: {
+                'Authorization': authToken
+            },
+            success: function (response) {
+                if (response && response.data) {
+                    $('#username-text').text(response.data); // 更新用户名
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('请求失败: ' + error);
+            }
+        });
+    });
+</script>
+</body>
+</html>

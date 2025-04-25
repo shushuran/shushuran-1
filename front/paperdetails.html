@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>讯息详情</title>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="static/js/jquery-3.7.1.min.js"></script>
+
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="static/js/bootstrap.bundle.min.js"></script>
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/detail.js"></script> <!-- 确保你有这个文件来包含你的JavaScript代码 -->
+    <script src="static/js/paperdetails.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>讯息详情</h2>
+    <div id="paperDetails" class="card mt-3">
+        <div class="card-header">
+            讯息信息
+        </div>
+        <div class="card-body">
+            <h5 class="card-title" id="paperTitle"></h5>
+            <p class="card-text"><strong>发布人</strong> <a id="paperAuthor" href="" target="_blank" rel="noopener noreferrer"></a></p>
+            <p class="card-text"><strong>内容</strong> <span id="paperText"></span></p>
+            <p class="card-text"><strong>发布日期</strong> <a id="paperPushdate" href="" target="_blank" rel="noopener noreferrer"></a></p>
+            <p class="card-text"><strong>更新日期</strong> <span id="paperUpdatedate"></span></p>
+            <p class="card-text"><strong>类型</strong> <span id="paperType"></span></p>
+        </div>
+        <div class="card-footer text-muted">
+            <button type="button" class="btn btn-secondary" onclick="window.location.replace('page.html')">返回</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

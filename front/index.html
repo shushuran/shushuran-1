@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>GFAuser</title>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="static/js/jquery-3.7.1.min.js"></script>
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="static/js/bootstrap.bundle.min.js"></script>
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="static/js/bootstrap.min.js"></script>
+    <!-- 引入天地图API的JS -->
+    <script type="text/javascript" src="http://api.tianditu.gov.cn/api?v=4.0&tk=8ffa41e6ad441c5ad77cb0486dc6f54b"></script>
+    <!-- 引入 Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 引入 lunar-calendar 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/lunar-calendar"></script>
+    <script src="static/js/index.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #40806d); /* 主色调渐变 */
+            color: #2c3e50;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.95); /* 半透明背景 */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px); /* 毛玻璃效果 */
+        }
+        .navbar-brand {
+            color: #2c3e50 !important;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        .nav-link {
+            color: #2c3e50 !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #3498db !important;
+        }
+
+        /* 地图和图片容器样式 */
+        .container-fluid {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            padding: 20px;
+            gap: 20px;
+            height: 70vh;
+            overflow: hidden;
+        }
+
+        /* 天气模块样式 */
+        .weather-container {
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto; /* 如果内容超出容器高度，允许滚动 */
+        }
+        .weather-section {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .weather-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #40806d; /* 主色调 */
+            margin-bottom: 10px;
+        }
+        .weather-info {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        /* 温度图表样式 */
+        #temperatureChart, #windChart {
+            width: 100% !important;
+            height: 120px !important;
+            margin: 0 auto;
+        }
+
+        /* 地图容器样式 */
+        #mapDiv {
+            flex: 1;
+            height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        /* 日历模块样式 */
+        .calendar-container {
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow-y: auto; /* 如果内容超出容器高度，允许滚动 */
+        }
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .calendar-header h5 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #40806d; /* 主色调 */
+            margin: 0;
+        }
+        .calendar-header button {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            color: #2c3e50;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .calendar-header button:hover {
+            background-color: #40806d; /* 主色调 */
+            color: #fff;
+        }
+        #lunar-calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #lunar-calendar-table th,
+        #lunar-calendar-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 0.9rem;
+        }
+        #lunar-calendar-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #40806d; /* 主色调 */
+        }
+        #lunar-calendar-table td {
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #lunar-calendar-table td:hover {
+            background-color: #f0f0f0;
+        }
+        #lunar-calendar-table td.today {
+            background-color: #e0f7fa; /* 主色调 */
+            font-weight: 600;
+        }
+        .lunar-day {
+            font-size: 0.6rem;
+            color: #6c757d;
+        }
+        .term {
+            font-size: 0.6rem;
+            color: #e91e63;
+        }
+
+        /* 农业早知道模块样式 */
+        .agriculture-section {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+        .agriculture-section h3 {
+            color: #40806d; /* 主色调 */
+            font-size: 1.75rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .agriculture-modules {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .agriculture-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            max-width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .agriculture-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        .agriculture-card h4 {
+            color: #40806d; /* 主色调 */
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        .agriculture-card p {
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+
+        /* 作物生长趋势CSS样式 */
+        /* 作物生长趋势CSS样式 */
+        .growth-modules {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .growth-card {
+            flex: 2;
+            min-width: 600px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .growth-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .chart-legends {
+            display: flex;
+            gap: 15px;
+        }
+
+        .legend-item {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .chart-container {
+            height: 300px; /* 固定高度 */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto; /* 添加滚动条 */
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 三列布局 */
+            grid-template-rows: repeat(2, 1fr); /* 两行布局 */
+            gap: 10px;
+            width: 100%;
+            height: 100%;
+            padding: 10px; /* 内边距 */
+        }
+
+        .image-grid img {
+            width: 100%;
+            height: 150px; /* 固定图片高度 */
+            object-fit: contain; /* 保持图片比例 */
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-grid img:hover {
+            transform: scale(1.05); /* 鼠标悬停时放大 */
+        }
+
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.2rem;
+            color: #40806d;
+            display: none; /* 默认隐藏 */
+        }
+
+        .growth-summary {
+            flex: 1;
+            min-width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .summary-item {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .bg-success { background: #40806d; }
+        .bg-warning { background: #ffc107; }
+        .bg-info { background: #17a2b8; }
+
+        .summary-content h5 {
+            color: #40806d;
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+        }
+
+        .summary-content p {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            .growth-card {
+                min-width: 100%;
+            }
+
+            .image-grid {
+                grid-template-columns: repeat(2, 1fr); /* 移动端改为两列布局 */
+                grid-template-rows: repeat(3, 1fr); /* 移动端改为三行布局 */
+            }
+        }
+        /* 底部法律部分样式 */
+        footer {
+            background-color: #2c3e50;
+            color: #ffffff;
+            padding: 20px 0;
+            margin-top: 20px;
+            border-top: 1px solid #34495e;
+        }
+        footer a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        footer a:hover {
+            color: #1abc9c;
+            text-decoration: underline;
+        }
+        footer p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<!-- 导航栏组件 -->
+<nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" href="#">
+        <img src="static/img/logo.png" alt="GFA_User Logo" style="height: 40px;">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">首页 <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">关于</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">联系我们</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="username-link">
+                    <strong id="username-text">未登录</strong>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<!-- 地图和图片容器 -->
+<div class="container-fluid">
+    <!-- 天气模块 -->
+    <div class="weather-container">
+        <!-- 天气状况 -->
+        <div class="weather-section weather-status">
+            <div class="section-title">天气状况</div>
+            <div class="weather-info" id="weather-status-text">晴</div>
+        </div>
+        <!-- 温度 -->
+        <div class="weather-section weather-temperature">
+            <div class="section-title">温度</div>
+            <canvas id="temperatureChart"></canvas>
+        </div>
+        <!-- 风速 -->
+        <div class="weather-section weather-wind">
+            <div class="section-title">风速</div>
+            <canvas id="windChart"></canvas>
+        </div>
+    </div>
+    <!-- 地图容器 -->
+    <div id="mapDiv" class="bg-light"></div>
+    <!-- 日历模块 -->
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <h5 id="current-month-year"></h5>
+            <div>
+                <button id="prev-month" class="btn btn-sm btn-outline-secondary">上个月</button>
+                <button id="next-month" class="btn btn-sm btn-outline-secondary">下个月</button>
+            </div>
+        </div>
+        <table id="lunar-calendar-table">
+            <thead>
+            <tr>
+                <th>日</th>
+                <th>一</th>
+                <th>二</th>
+                <th>三</th>
+                <th>四</th>
+                <th>五</th>
+                <th>六</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- 日历内容由 JavaScript 动态生成 -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 农业早知道模块 -->
+<div class="agriculture-section">
+    <h3>农业早知道</h3>
+    <div class="agriculture-modules">
+        <!-- 天气预警模块 -->
+        <div class="agriculture-card" id="weather-warning">
+            <h4>天气预警</h4>
+            <p class="content">加载中...</p>
+        </div>
+        <!-- 病虫害防治模块 -->
+        <div class="agriculture-card" id="pest-control">
+            <h4>病虫害防治</h4>
+            <p class="content">加载中...</p>
+        </div>
+        <!-- 市场行情模块 -->
+        <div class="agriculture-card" id="market-trend">
+            <h4>市场行情</h4>
+            <p class="content">加载中...</p>
+        </div>
+        <!-- 种植技术模块 -->
+        <div class="agriculture-card" id="planting-tech">
+            <h4>种植技术</h4>
+            <p class="content">加载中...</p>
+        </div>
+    </div>
+</div>
+
+<!-- 作物长势模块 -->
+<div class="agriculture-section">
+    <h3>作物长势分析</h3>
+    <div class="growth-modules">
+        <!-- 图片展示容器 -->
+        <div class="growth-card">
+            <div class="chart-header">
+                <h4> 2016-2021年梁山县NDVI二值化图像</h4>
+                <div class="chart-legends">
+                    <span class="legend-item"><i class="fas fa-chart-line" style="color: #40806d"></i> 长势分析图</span>
+                </div>
+            </div>
+            <div class="chart-container">
+                <div class="image-grid" id="image-grid">
+                    <!-- 图片将由 JavaScript 动态加载 -->
+                </div>
+                <div class="loading-spinner" id="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i> 加载中...
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据摘要 -->
+        <div class="growth-summary">
+            <div class="summary-item">
+                <div class="summary-icon bg-success">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="summary-content">
+                    <h5>当前长势评分(基于NDVI)</h5>
+                    <p id="growth-score">0.058684</p>
+                </div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-icon bg-warning">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="summary-content">
+                    <h5>健康状态</h5>
+                    <p id="health-status">良</p>
+                </div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-icon bg-info">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="summary-content">
+                    <h5>环比变化</h5>
+                    <p id="growth-change">2.5</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部法律部分 -->
+<footer class="text-center">
+    <div class="container">
+        <p>&copy; 2023 GFAuser. 保留所有权利。</p>
+        <p>
+            <a href="#">隐私政策</a> |
+            <a href="#">使用条款</a> |
+            <a href="#">版权声明</a>
+        </p>
+        <p>
+            本网站提供的地图数据和服务由<a href="http://www.tianditu.gov.cn/" target="_blank">天地图</a>提供支持。
+        </p>
+        <p>
+            本网站仅用于学习和演示目的，不得用于商业用途。
+        </p>
+    </div>
+</footer>
+
+<!-- 地图加载脚本 -->
+<script>
+    var map;
+    var zoom = 9; // 初始缩放级别
+    var initialCenter = new T.LngLat(116.1085, 35.7965); // 默认初始中心点
+    var currentMarker = null; // 当前标点
+
+    function onLoad() {
+        // 获取用户的地理位置
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    // 设置初始中心点为用户的位置
+                    initialCenter = new T.LngLat(position.coords.longitude, position.coords.latitude);
+
+                    // 初始化地图
+                    initMap();
+
+                    // 获取天气数据
+                    fetchTemperatureData(position.coords.longitude, position.coords.latitude)
+                        .then(data => {
+                            // 绘制体感温度折线图
+                            renderTemperatureChart(data);
+
+                            // 绘制风速折线图
+                            renderWindChart(data);
+
+                            // 更新天气状况
+                            $('#weather-status-text').text(data.weatherStatus);
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            alert(error); // 显示错误信息
+                        });
+                },
+                function(error) {
+                    console.error("获取地理位置失败:", error);
+                    // 如果获取地理位置失败，使用默认位置
+                    initMap();
+                }
+            );
+        } else {
+            console.error("浏览器不支持地理位置功能");
+            // 如果浏览器不支持地理位置功能，使用默认位置
+            initMap();
+        }
+    }
+
+    // 初始化地图
+    function initMap() {
+        var imageURL = "http://t0.tianditu.gov.cn/img_w/wmts?" +
+            "SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles" +
+            "&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk=8ffa41e6ad441c5ad77cb0486dc6f54b";
+        var lay = new T.TileLayer(imageURL, { minZoom: 1, maxZoom: 18 });
+        var config = { layers: [lay] };
+        map = new T.Map("mapDiv", config);
+        map.centerAndZoom(initialCenter, zoom);
+        map.enableScrollWheelZoom();
+
+        // 添加当前位置经纬度信息控件
+        addPositionControl();
+
+        // 添加复位按钮
+        addResetButton();
+
+        // 在初始坐标点放置默认标点
+        addInitialMarker();
+
+        // 绑定左键点击事件
+        map.addEventListener('click', function (e) {
+            handleMapClick(e.lnglat);
+        });
+    }
+
+    // 添加当前位置经纬度信息控件
+    function addPositionControl() {
+        var positionControl = document.createElement('div');
+        positionControl.id = 'position-control';
+        positionControl.style.position = 'absolute';
+        positionControl.style.top = '10px';
+        positionControl.style.right = '10px';
+        positionControl.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+        positionControl.style.padding = '10px';
+        positionControl.style.borderRadius = '5px';
+        positionControl.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.2)';
+        positionControl.style.zIndex = '1000'; // 确保控件在地图上方
+        positionControl.style.fontFamily = 'Poppins, sans-serif';
+        positionControl.style.fontSize = '14px';
+        positionControl.style.color = '#333';
+        positionControl.innerHTML = `
+            <i class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>
+            经度: <span id="lng"></span>, 纬度: <span id="lat"></span>
+        `;
+        document.getElementById('mapDiv').appendChild(positionControl);
+
+        // 监听地图移动事件，更新经纬度信息
+        map.addEventListener('moveend', function () {
+            var center = map.getCenter();
+            document.getElementById('lng').innerText = center.lng.toFixed(4);
+            document.getElementById('lat').innerText = center.lat.toFixed(4);
+        });
+
+        // 初始化显示
+        var center = map.getCenter();
+        document.getElementById('lng').innerText = center.lng.toFixed(4);
+        document.getElementById('lat').innerText = center.lat.toFixed(4);
+    }
+
+    // 添加复位按钮
+    function addResetButton() {
+        var resetButton = document.createElement('button');
+        resetButton.id = 'reset-button';
+        resetButton.innerHTML = '<i class="fas fa-home"></i>'; // 使用 home 图标
+        resetButton.style.position = 'absolute';
+        resetButton.style.bottom = '10px';
+        resetButton.style.right = '10px';
+        resetButton.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+        resetButton.style.padding = '10px';
+        resetButton.style.borderRadius = '50%';
+        resetButton.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.2)';
+        resetButton.style.cursor = 'pointer';
+        resetButton.style.zIndex = '1000'; // 确保按钮在地图上方
+        resetButton.style.border = 'none';
+        resetButton.style.fontSize = '16px';
+        resetButton.style.color = '#333';
+        resetButton.onclick = function (e) {
+            e.stopPropagation(); // 阻止事件冒泡，避免触发地图点击事件
+            // 移除当前标点
+            if (currentMarker) {
+                map.removeOverLay(currentMarker);
+            }
+            // 在初始位置重新放置标点
+            addInitialMarker();
+            // 将地图中心点复位到初始位置
+            map.centerAndZoom(initialCenter, zoom);
+        };
+        document.getElementById('mapDiv').appendChild(resetButton);
+    }
+
+    // 在初始坐标点放置默认标点
+    function addInitialMarker() {
+        currentMarker = new T.Marker(initialCenter);
+        map.addOverLay(currentMarker);
+    }
+
+    // 处理地图点击事件
+    function handleMapClick(lnglat) {
+        // 移除当前标点
+        if (currentMarker) {
+            map.removeOverLay(currentMarker);
+        }
+
+        // 在新的位置插入标点
+        currentMarker = new T.Marker(lnglat);
+        map.addOverLay(currentMarker);
+
+        // 发送标点信息到后端
+        sendMarkerToBackend(lnglat);
+    }
+
+    // 发送标点信息到后端
+    function sendMarkerToBackend(lnglat) {
+        var data = {
+            longitude: lnglat.lng,
+            latitude: lnglat.lat
+        };
+
+        $.ajax({
+            url: 'http://localhost:8080/api/markers', // 替换为您的后端API地址
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                console.log('标点信息已发送到后端:', response);
+            },
+            error: function (xhr, status, error) {
+                console.error('发送标点信息失败:', error);
+            }
+        });
+    }
+
+    // 确保DOM加载完成后执行onLoad函数
+    window.onload = onLoad;
+</script>
+
+<!--天气-->
+<script>
+// 获取天气容器元素
+    const weatherContainer = document.querySelector('.weather-container');
+
+    // 添加点击事件监听器
+    weatherContainer.addEventListener('click', function() {
+    // 跳转到目标页面
+    window.location.href = 'weatherdetail.html'; // 将此处替换为你想要跳转的页面URL
+    });
+</script>
+
+<!--  农业早知道-->
+<script>
+    // 获取所有农业卡片元素
+    const agricultureCards = document.querySelectorAll('.agriculture-card');
+
+    // 为每个卡片添加点击事件监听器
+    agricultureCards.forEach(card => {
+        card.addEventListener('click', function () {
+            // 跳转到目标页面
+            window.location.href = 'display_page.html'; // 将此处替换为你想要跳转的页面URL
+        });
+    });
+</script>
+<script>
+
+</script>
+
+<!-- 温度折线图脚本 -->
+<script>
+    // 从后端获取温度数据
+    function fetchTemperatureData(longitude, latitude) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: `http://localhost:8080/weather/hourly?longitude=${longitude}&latitude=${latitude}`, // 使用用户位置的经纬度
+                type: 'GET',
+                success: function(response) {
+                    if (response && response.datetime && response.temperature && response.wind_speed && response.skycon_zh) {
+                        // 提取时间、体感温度、风速和天气状况数据
+                        const data = {
+                            labels: response.datetime.map(time => time.split('T')[1].substring(0, 5)), // 提取时间部分（HH:mm）
+                            temperatures: response.temperature, // 体感温度数据
+                            windSpeeds: response.wind_speed, // 风速数据
+                            weatherStatus: response.skycon_zh[0] // 天气状况（第一个值）
+                        };
+                        resolve(data); // 返回处理后的数据
+                    } else {
+                        reject('无法获取天气数据');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    reject('请求失败: ' + error);
+                }
+            });
+        });
+    }
+
+    // 绘制温度折线图
+    function renderTemperatureChart(data) {
+        const ctx = document.getElementById('temperatureChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line', // 折线图
+            data: {
+                labels: data.labels, // X轴标签（时间）
+                datasets: [{
+                    label: '体感温度 (°C)',
+                    data: data.temperatures, // Y轴数据（体感温度）
+                    borderColor: '#40806d', // 主色调 */
+                    backgroundColor: 'rgba(64, 128, 109, 0.1)', // 主色调透明度 */
+                    borderWidth: 2, // 折线宽度
+                    fill: true, // 填充折线下方区域
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: '时间'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: '体感温度 (°C)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // 隐藏图例
+                    }
+                }
+            }
+        });
+    }
+
+    // 绘制风速折线图
+    function renderWindChart(data) {
+        const ctx = document.getElementById('windChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line', // 折线图
+            data: {
+                labels: data.labels, // X轴标签（时间）
+                datasets: [{
+                    label: '风速 (m/s)',
+                    data: data.windSpeeds, // Y轴数据（风速）
+                    borderColor: '#40806d', // 主色调 */
+                    backgroundColor: 'rgba(64, 128, 109, 0.1)', // 主色调透明度 */
+                    borderWidth: 2, // 折线宽度
+                    fill: true, // 填充折线下方区域
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: '时间'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: '风速 (m/s)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // 隐藏图例
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+<!-- 农历日历表脚本 -->
+<script>
+    // 获取当前日期
+    let today = new Date();
+    let year = today.getFullYear();
+    let month = today.getMonth() + 1; // 月份从0开始，所以要加1
+
+    // 获取日历表格的 tbody 元素
+    const calendarBody = document.querySelector("#lunar-calendar-table tbody");
+    const currentMonthYear = document.getElementById("current-month-year");
+
+    // 将农历日期转换为“初一、初二”等格式
+    function formatLunarDay(lunarDay) {
+        const lunarDayNames = [
+            "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十",
+            "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十",
+            "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十"
+        ];
+        return lunarDayNames[lunarDay - 1] || lunarDay;
+    }
+
+    // 将农历月份转换为“正月、腊月”等格式
+    function formatLunarMonth(lunarMonth) {
+        const lunarMonthNames = [
+            "正月", "二月", "三月", "四月", "五月", "六月",
+            "七月", "八月", "九月", "十月", "冬月", "腊月"
+        ];
+        return lunarMonthNames[lunarMonth - 1] || lunarMonth;
+    }
+
+    // 更新月份标题
+    function updateMonthTitle(year, month) {
+        currentMonthYear.textContent = `${year}年${month}月`;
+    }
+
+    // 生成一个月的日历
+    function generateCalendar(year, month) {
+        // 清空表格内容
+        calendarBody.innerHTML = "";
+
+        // 获取当前月的第一天和最后一天
+        const firstDay = new Date(year, month - 1, 1);
+        const lastDay = new Date(year, month, 0);
+
+        // 获取当前月的总天数
+        const totalDays = lastDay.getDate();
+
+        // 获取当前月第一天是星期几（0=星期日，6=星期六）
+        const firstDayOfWeek = firstDay.getDay();
+
+        // 创建日历行
+        let row = document.createElement("tr");
+        let dayCounter = 1;
+
+        // 填充空白单元格（第一天之前的空白）
+        for (let i = 0; i < firstDayOfWeek; i++) {
+            const cell = document.createElement("td");
+            row.appendChild(cell);
+        }
+
+        // 填充日期单元格
+        for (let day = 1; day <= totalDays; day++) {
+            const cell = document.createElement("td");
+
+            // 公历日期
+            const solarDate = `${year}-${month}-${day}`;
+
+            // 获取农历信息
+            const lunarInfo = LunarCalendar.solarToLunar(year, month, day);
+            const lunarDate = `${formatLunarMonth(lunarInfo.lunarMonth)}${formatLunarDay(lunarInfo.lunarDay)}`; // 使用 formatLunarMonth 和 formatLunarDay 转换农历信息
+
+            // 显示公历和农历日期
+            cell.innerHTML = `
+                <div>${day}</div>
+                <div class="lunar-day">${lunarDate}</div>
+                ${lunarInfo.term ? `<div class="term">${lunarInfo.term}</div>` : ""}
+            `;
+
+            // 高亮今天
+            if (
+                year === today.getFullYear() &&
+                month === today.getMonth() + 1 &&
+                day === today.getDate()
+            ) {
+                cell.classList.add("today");
+            }
+
+            // 点击日期显示更多信息
+            cell.addEventListener("click", () => {
+                alert(`公历: ${solarDate}\n农历: ${lunarDate}\n节气: ${lunarInfo.term || "无"}`);
+            });
+
+            // 添加到行中
+            row.appendChild(cell);
+
+            // 每行最多 7 天，换行
+            if ((firstDayOfWeek + day) % 7 === 0) {
+                calendarBody.appendChild(row);
+                row = document.createElement("tr");
+            }
+        }
+
+        // 添加最后一行
+        if (row.children.length > 0) {
+            calendarBody.appendChild(row);
+        }
+
+        // 更新月份标题
+        updateMonthTitle(year, month);
+    }
+
+    // 切换上个月
+    document.getElementById('prev-month').addEventListener('click', () => {
+        if (month === 1) {
+            year--;
+            month = 12;
+        } else {
+            month--;
+        }
+        generateCalendar(year, month);
+    });
+
+    // 切换下个月
+    document.getElementById('next-month').addEventListener('click', () => {
+        if (month === 12) {
+            year++;
+            month = 1;
+        } else {
+            month++;
+        }
+        generateCalendar(year, month);
+    });
+
+    // 初始化显示
+    generateCalendar(year, month);
+</script>
+
+<script>
+    // 添加作物长势图片加载脚本
+    function fetchGrowthData() {
+        // 显示加载动画
+        document.getElementById('loading-spinner').style.display = 'block';
+
+        $.ajax({
+            url: 'http://localhost:8080/graphs/list', // 后端 API 路径
+            method: 'GET',
+            success: function(response) {
+                // 清空图片容器
+                const imageGrid = document.getElementById('image-grid');
+                imageGrid.innerHTML = '';
+
+                // 动态加载图片
+                response.forEach((graph, index) => {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'image-item';
+
+                    const img = document.createElement('img');
+                    img.src = graph.url; // 使用后端返回的图片路径
+                    img.alt = graph.name || `作物长势图 ${index + 1}`; // 使用后端返回的描述
+                    img.className = 'growth-image';
+
+                    const description = document.createElement('p');
+                    description.className = 'image-description';
+                    description.textContent = graph.name || `图片 ${index + 1}`; // 显示描述
+
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(description);
+                    imageGrid.appendChild(imgContainer);
+                });
+
+                // 隐藏加载动画
+                document.getElementById('loading-spinner').style.display = 'none';
+            },
+            error: function(xhr, status, error) {
+                console.error('获取长势数据失败:', error);
+                // 隐藏加载动画
+                document.getElementById('loading-spinner').style.display = 'none';
+                // 显示错误提示
+                const imageGrid = document.getElementById('image-grid');
+                imageGrid.innerHTML = '<p style="color: red; text-align: center;">图片加载失败，请稍后重试。</p>';
+            }
+        });
+    }
+
+    // 页面加载完成后获取数据
+    $(document).ready(function() {
+        fetchGrowthData();
+    });
+</script>
+</body>
+</html>

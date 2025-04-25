@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>讯息信息编辑</title>
+    <!-- 新 Bootstrap4 核心 CSS 文件 -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css">
+    <!-- 自定义样式 -->
+    <style>
+        /* 导入 Poppins 字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        body {
+            background: linear-gradient(135deg, #e0f7fa, #40806d); /* 主色调渐变 */
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.8; /* 增加行高 */
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95); /* 半透明背景 */
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px); /* 毛玻璃效果 */
+        }
+        h2 {
+            color: #40806d; /* 主色调 */
+            font-weight: 700; /* 加粗字体 */
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            color: #2c3e50; /* 深灰色文字 */
+            font-weight: 500; /* 中等字重 */
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #40806d; /* 主色调 */
+            box-shadow: 0 0 5px rgba(64, 128, 109, 0.5); /* 主色调阴影 */
+        }
+        textarea.form-control {
+            height: 150px; /* 设置文本区域高度 */
+        }
+        .btn {
+            border: none;
+            border-radius: 50px; /* 圆形按钮 */
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600; /* 加粗字体 */
+            transition: all 0.3s ease;
+            margin: 5px;
+            min-width: 150px; /* 按钮最小宽度 */
+            font-family: 'Poppins', sans-serif; /* 使用 Poppins 字体 */
+            letter-spacing: 0.5px; /* 增加字间距 */
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #40806d, #4a148c); /* 主色调渐变 */
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px); /* 悬停时按钮上移 */
+            box-shadow: 0 4px 15px rgba(64, 128, 109, 0.4); /* 主色调阴影 */
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #ff6f61, #ffcccb); /* 珊瑚色渐变 */
+            color: white;
+        }
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(255, 111, 97, 0.4);
+        }
+
+        /* 优化选择框样式 */
+        select.form-control {
+            font-size: 1rem; /* 设置选择框文字大小 */
+            padding: 10px; /* 增加内边距 */
+            height: auto; /* 自动高度 */
+            min-height: 50px; /* 最小高度 */
+            width: 100%; /* 宽度占满父容器 */
+        }
+
+        /* 优化选项样式 */
+        select.form-control option {
+            font-size: 1rem; /* 设置选项文字大小 */
+            padding: 8px; /* 增加选项内边距 */
+        }
+    </style>
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="static/js/jquery-3.7.1.min.js"></script>
+    <!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+    <script src="static/js/bootstrap.bundle.min.js"></script>
+    <!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/edit.js"></script>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>讯息信息编辑</h2>
+    <form id="editPaperForm">
+        <div class="form-group">
+            <label for="paperId">ID</label>
+            <input type="text" class="form-control" id="paperId" name="paperId" readonly>
+        </div>
+        <div class="form-group">
+            <label for="title">讯息标题</label>
+            <input type="text" class="form-control" id="title" name="title" required>
+        </div>
+
+        <div class="form-group">
+            <label for="text">内容</label>
+            <textarea class="form-control" id="text" name="text" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="type">类型</label>
+            <select class="form-control" id="type" name="type" required>
+                <option value="" disabled selected>请选择类型</option>
+                <option value="天气预警">天气预警</option>
+                <option value="病虫害防治">病虫害防治</option>
+                <option value="市场行情">市场行情</option>
+                <option value="种植技术">种植技术</option>
+            </select>
+        </div>
+
+        <button type="button" class="btn btn-secondary" onclick="window.location.replace('page.html')">返回</button>
+        <button type="submit" class="btn btn-primary">更新</button>
+    </form>
+</div>
+</body>
+</html>

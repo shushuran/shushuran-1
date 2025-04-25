@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>后台管理系统</title>
+	<!-- 新 Bootstrap4 核心 CSS 文件 -->
+	<link rel="stylesheet" href="static/css/bootstrap.min.css">
+	<!-- 自定义样式 -->
+	<style>
+		/* 导入 Poppins 字体 */
+		@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+		body {
+			background: linear-gradient(135deg, #f0faf7, #e0f2f1, #d0ece7); /* 更淡的绿色渐变背景 */
+			font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			min-height: 100vh;
+			margin: 0;
+			padding: 0;
+			line-height: 1.6;
+			font-size: 16px;
+		}
+
+		/* 导航栏样式 */
+		.custom-navbar {
+			background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变 */
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		.navbar-brand {
+			color: #fff !important;
+			font-weight: 600;
+			font-size: 1.5rem;
+		}
+
+		.nav-link {
+			color: #fff !important;
+			font-weight: 500;
+		}
+
+		.nav-link:hover {
+			color: #f8f9fa !important;
+		}
+
+		/* 搜索表单样式 */
+		#searchForm {
+			background: #fff;
+			padding: 20px;
+			border-radius: 15px; /* 更圆润的圆角 */
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		#findBtn {
+			background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变 */
+			border: none;
+			padding: 10px 20px;
+			border-radius: 25px; /* 圆角按钮 */
+			color: #fff;
+			font-weight: 500;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		#findBtn:hover {
+			background: linear-gradient(135deg, #81c784, #a5d6a7);
+		}
+
+		/* 表格样式 */
+		.table {
+			background: #fff;
+			border-radius: 15px; /* 更圆润的圆角 */
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			overflow: hidden; /* 防止圆角被表格内容覆盖 */
+		}
+
+		.table th {
+			background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变表头 */
+			color: #fff;
+			font-weight: 600;
+		}
+
+		.table td {
+			vertical-align: middle;
+		}
+
+		.table-striped tbody tr:nth-of-type(odd) {
+			background-color: rgba(165, 214, 167, 0.05); /* 更淡的绿色条纹 */
+		}
+
+		.table-hover tbody tr:hover {
+			background-color: rgba(165, 214, 167, 0.1); /* 悬停效果 */
+		}
+
+		/* 按钮样式 */
+		.btn-primary {
+			background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变 */
+			border: none;
+			padding: 10px 20px;
+			border-radius: 25px; /* 圆角按钮 */
+			color: #fff;
+			font-weight: 500;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		.btn-primary:hover {
+			background: linear-gradient(135deg, #81c784, #a5d6a7);
+		}
+
+		/* 分页样式 */
+		.pagination {
+			justify-content: center;
+		}
+
+		.page-item.active .page-link {
+			background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变分页按钮 */
+			border-color: #a5d6a7;
+			color: #fff;
+		}
+
+		.page-link {
+			color: #81c784;
+			border: 1px solid #dee2e6;
+			margin: 0 5px;
+			border-radius: 25px; /* 圆角分页按钮 */
+		}
+
+		.page-link:hover {
+			background: #a5d6a7;
+			color: #fff;
+		}
+
+		/* 整体布局 */
+		.container.custom-margin-top {
+			margin-top: 100px;
+		}
+
+		.card {
+			border: none;
+			border-radius: 15px; /* 更圆润的圆角 */
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		.card-header {
+			background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变卡片头部 */
+			color: #fff;
+			font-weight: 600;
+			border-radius: 15px 15px 0 0;
+		}
+
+		/* 结果展示区域 */
+		#result {
+			margin-top: 20px;
+			padding: 20px;
+			background: #fff;
+			border-radius: 15px; /* 更圆润的圆角 */
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		/* 添加新论文按钮 */
+		#addPaperBtn {
+			margin-top: 20px;
+			background: linear-gradient(135deg, #a5d6a7, #81c784); /* 更淡的绿色渐变 */
+			border: none;
+			padding: 10px 20px;
+			border-radius: 25px; /* 圆角按钮 */
+			color: #fff;
+			font-weight: 500;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		}
+
+		#addPaperBtn:hover {
+			background: linear-gradient(135deg, #81c784, #a5d6a7);
+		}
+
+		/* 输入框样式 */
+		.form-control {
+			border-radius: 25px; /* 圆角输入框 */
+			border: 1px solid #ddd;
+			padding: 10px;
+		}
+
+		.form-control:focus {
+			border-color: #a5d6a7;
+			box-shadow: 0 0 5px rgba(165, 214, 167, 0.5);
+		}
+	</style>
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="static/js/jquery-3.7.1.min.js"></script>
+	<!-- bootstrap.bundle.min.js 用于弹窗、提示、下拉菜单，包含了 popper.min.js -->
+	<script src="static/js/bootstrap.bundle.min.js"></script>
+	<!-- 最新的 Bootstrap4 核心 JavaScript 文件 -->
+	<script src="static/js/bootstrap.min.js"></script>
+	<script src="static/js/page.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg custom-navbar fixed-top">
+	<div class="container">
+		<a class="navbar-brand" href="#">后台管理系统</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+					<a class="nav-link" href="userinfo.html">
+						<strong id="username-text">未登录</strong>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<div class="container mt-6">
+	<!-- Search Paper Form -->
+	<div class="container custom-margin-top">
+		<h3 class="mb-4">查找讯息</h3>
+		<form id="searchForm" class="form-inline">
+			<div class="form-group mr-sm-2">
+				<label for="searchType" class="sr-only">查找方式</label>
+				<select class="custom-select" id="searchType">
+					<option value="findbyid">ID</option>
+					<option value="findbytitle">论文标题</option>
+				</select>
+			</div>
+			<div class="form-group mx-sm-2">
+				<input type="text" class="form-control" id="searchInput" placeholder="输入ID或论文标题">
+			</div>
+			<button type="button" class="btn btn-primary" id="findBtn">查找</button>
+		</form>
+		<div id="result"></div>
+	</div>
+	<br><br>
+	<button id="addPaperBtn" class="btn btn-primary">添加新讯息</button>
+	<br><br>
+	<!-- List Papers Table -->
+	<div class="card mb-4">
+		<div class="card-header">讯息列表</div>
+		<div class="card-body">
+			<table class="table table-striped">
+				<thead>
+				<tr>
+					<th>序号</th>
+					<th>讯息标题</th>
+					<th>发布人</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<tbody id="paperTableBody">
+				<!-- Rows will be populated here -->
+				</tbody>
+			</table>
+			<nav>
+				<ul class="pagination" id="pagination">
+					<!-- Pagination links will be populated here -->
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+</body>
+</html>
